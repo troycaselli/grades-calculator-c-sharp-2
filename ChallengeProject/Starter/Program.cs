@@ -33,7 +33,7 @@ string currentStudentLetterGrade = "";
 
 // display the header row for scores/grades
 Console.Clear();
-Console.WriteLine("Student\t\tExam Score\tGrade\tLetter Grade\tExtra Credit\n");
+Console.WriteLine("Student\t\tExam Score\tOverall\tGrade\tExtra Credit\n");
 
 /*
 The outer foreach loop is used to:
@@ -60,14 +60,17 @@ foreach (string name in studentNames)
         studentScores = loganScores;
 
     int sumExamScores = 0;
-    int sumAssignmentScores = 0;
+    int sumExtraCreditScores = 0;
+    decimal sumAssignmentScores = 0;
 
-    decimal currentStudentGrade = 0;
     decimal averageExamScore = 0;
+    decimal averageExtraCreditScore = 0;
+    decimal extraCreditPoints = 0;
+    decimal currentStudentGrade = 0;
 
     int gradedAssignments = 0;
 
-    /* 
+    /*
     the inner foreach loop sums assignment scores
     extra credit assignments are worth 10% of an exam score
     */
@@ -81,11 +84,16 @@ foreach (string name in studentNames)
             sumExamScores += score;
         }
         else
-            sumAssignmentScores += score / 10;
+        {
+            sumAssignmentScores += score / 10m;
+            sumExtraCreditScores += score;
+        }
     }
 
-    averageExamScore = (decimal)(sumExamScores) / examAssignments;
-    currentStudentGrade = (decimal)(sumAssignmentScores) / examAssignments;
+    averageExamScore = (decimal)sumExamScores / examAssignments;
+    averageExtraCreditScore = sumExtraCreditScores / (decimal)(gradedAssignments - examAssignments);
+    currentStudentGrade = sumAssignmentScores / examAssignments;
+    extraCreditPoints = currentStudentGrade - averageExamScore;
 
     if (currentStudentGrade >= 97)
         currentStudentLetterGrade = "A+";
@@ -129,9 +137,9 @@ foreach (string name in studentNames)
     // Student         Grade
     // Sophia:         92.2    A-
     
-    Console.WriteLine($"{currentStudent}\t\t{averageExamScore}\t\t{currentStudentGrade}\t{currentStudentLetterGrade}\t\t0 (0 pts)");
+    Console.WriteLine($"{currentStudent}\t\t{averageExamScore}\t\t{currentStudentGrade}\t{currentStudentLetterGrade}\t\t{averageExtraCreditScore} ({extraCreditPoints} pts)");
 }
 
 // required for running in VS Code (keeps the Output windows open to view results)
 Console.WriteLine("\n\rPress the Enter key to continue");
-// Console.ReadLine();
+Console.ReadLine();
